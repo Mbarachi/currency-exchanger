@@ -10,8 +10,56 @@
       </div>
     </nav>
   </header>
-  <section style="height: 800px;">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+  <!-- Sticky Panel -->
+  <section>
+    <div class="currency-title">
+      <b>Currency Exchanger</b>
+    </div>
+    <div class="sticky-panel">
+      <div class="flex-panel-top">
+        <div class="amount-input">
+          <label for="amount">Amount</label>
+          <input type="number">
+        </div>
+        <div class="converter">
+          <div class="currency-dropdown">
+            <div class="from-input">
+              <label for="from">From</label>
+              <select>
+                <option>EU</option>
+                <option>USD</option>
+                <option>NG</option>
+              </select>
+            </div>
+            <span class="material-symbols-outlined compare_arrows">
+              compare_arrows
+            </span>
+            <div class="to-input">
+              <label for="to">To</label>
+              <select>
+                <option></option>
+                <option></option>
+                <option></option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <button class="convert_button">Convert</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex-panel-bottom">
+        <div class="exchange-rate-container">
+          <p>1.00 EUR = XX.XX USD</p>
+        </div>
+          <div class="flex-inner-panel-bottom">
+            <div class="exchange-rate-value-container">
+              <p>XX.XX USD</p>
+            </div>
+            <button class="more_details_button">More Details</button>
+          </div>
+      </div>
+    </div>
   </section>
 </div>
 

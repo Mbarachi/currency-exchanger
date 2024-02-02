@@ -21,18 +21,143 @@ header {
 
 .buttons {
     display: flex;
+
+    button {
+        margin-left: 10px;
+        padding: 12px 16px;
+        background-color: transparent;
+        color: white;
+        border: 1px solid;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: whitesmoke;
+        color: #333;
+    }
 }
 
-button {
-    margin-left: 10px;
-    padding: 12px 16px;
-    background-color: transparent;
+
+.currency-title {
+    margin: 15px 0;
+    font-size: 20px;
+}
+
+.sticky-panel {
+    border: 1px solid white;
+    padding: 1rem;
+    height: fit-content;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid white;
     color: white;
-    border: 1px solid;
-    cursor: pointer;
+    outline: none;
+    background: none;
+    margin-bottom: 16px;
 }
 
-button:hover {
-    background-color: whitesmoke;
-    color: #333;
+select {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 5px;
+    background-color: #6c767d;
+    margin-bottom: 16px;
+}
+
+.flex-panel-top {
+    display: grid;
+    grid-template-columns: 30% 1fr;
+    gap: 2rem;
+}
+
+.flex-panel-bottom {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 30% 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+
+    .flex-inner-panel-bottom {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .exchange-rate-container {
+        // padding: 8px;
+        height: 30px;
+        box-sizing: border-box;
+        border: 1px solid white;
+        color: white;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            font-size: 15px;
+            margin: 0;
+        }
+    }
+
+    .exchange-rate-value-container {
+        width: 60%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid white;
+        color: white;
+        text-align: center;
+    }
+
+    .more_details_button {
+        background-color: #0057d8;
+        padding: 12px 16px;
+        border: none;
+        width: 40%;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+    }
+}
+
+.converter {
+    .from-input {
+        width: 100%;
+    }
+
+    .to-input {
+        width: 100%;
+    }
+}
+
+.currency-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .compare_arrows {
+        font-size: 30px;
+        cursor: pointer;
+    }
+}
+
+.convert_button {
+    background-color: #0057d8;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    width: 100%;
+    cursor: pointer;
 }
