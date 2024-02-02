@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+/* global styles */
+
+$container-max-width: 1400px;
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #333;
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: $container-max-width;
+    padding-right: 15px;
+    padding-left: 15px;
+}
