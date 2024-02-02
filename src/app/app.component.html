@@ -19,16 +19,14 @@
       <div class="flex-panel-top">
         <div class="amount-input">
           <label for="amount">Amount</label>
-          <input type="number">
+          <input matInput type="number" (input)="onInput($event)">
         </div>
         <div class="converter">
           <div class="currency-dropdown">
             <div class="from-input">
               <label for="from">From</label>
-              <select>
-                <option>EU</option>
-                <option>USD</option>
-                <option>NG</option>
+              <select [disabled]="areElementsDisabled">
+                <option *ngFor="let currencyCode of getCurrencyCodes()">{{ currencyCode }}</option>
               </select>
             </div>
             <span class="material-symbols-outlined compare_arrows">
@@ -36,15 +34,13 @@
             </span>
             <div class="to-input">
               <label for="to">To</label>
-              <select>
-                <option></option>
-                <option></option>
-                <option></option>
+              <select [disabled]="areElementsDisabled">
+                <option *ngFor="let currencyCode of getCurrencyCodes()">{{ currencyCode }}</option>
               </select>
             </div>
           </div>
           <div>
-            <button class="convert_button">Convert</button>
+            <button class="convert_button" [class.disabled]="areElementsDisabled">Convert</button>
           </div>
         </div>
       </div>
@@ -56,7 +52,7 @@
             <div class="exchange-rate-value-container">
               <p>XX.XX USD</p>
             </div>
-            <button class="more_details_button">More Details</button>
+            <button class="more_details_button" [class.disabled]="areElementsDisabled">More Details</button>
           </div>
       </div>
     </div>
