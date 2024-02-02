@@ -1,8 +1,12 @@
 header {
     color: white;
     padding: 0.5rem 1rem;
+    background-color: #333; /* makes the header Opaque */
     border: 1px solid;
     margin-top: 1rem;
+    position: sticky; /* makes the header sticky */
+    top: 0;
+    z-index: 100;
 }
 
 .navbar {
