@@ -24,12 +24,6 @@ export class AppComponent implements OnInit {
   // Nine most popular currency
   popularCurrencies: string[] = ['USD', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK'];
 
-  ngOnInit(): void {
-    this.getLatestRates();
-    this.getSymbols();
-    this.performConversion();
-  }
-
   currencyTitle: string = 'Currency Exchanger'
 
   currencies: CurrencyExchangeRates = {}
@@ -38,6 +32,14 @@ export class AppComponent implements OnInit {
   popularCurrenciesCovertedRates: any[] = []
 
   moreDetails: boolean = false
+
+  showCards:boolean = false
+
+  ngOnInit(): void {
+    this.getLatestRates();
+    this.getSymbols();
+    this.performConversion();
+  }
 
   getLatestRates() {
     this.exchangeService.getLatestExchangeRates().subscribe(
@@ -123,6 +125,7 @@ export class AppComponent implements OnInit {
         return { currency, convertedAmount: popularConvertedAmount };
       });
       this.popularCurrenciesCovertedRates = convertedResults
+      this.showCards = true
     } else {
       console.error('Exchange rates not available for selected currencies.');
     }
@@ -149,6 +152,7 @@ export class AppComponent implements OnInit {
 
   backHome() {
     this.moreDetails = false
+    this.showCards = false
     this.currencyTitle = 'Currency Exchanger'
     this.selectedFromCurrency = 'EUR';
     this.selectedToCurrency = 'USD';

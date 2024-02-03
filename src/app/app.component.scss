@@ -107,16 +107,28 @@ select {
 
 .flex-panel-top {
     display: grid;
-    grid-template-columns: 30% 1fr;
-    gap: 2rem;
+    grid-template-columns: 100%;
+
+    /* Responsive adjustments */
+    @media screen and (min-width: 768px) {
+        grid-template-columns: 30% 1fr;
+        gap: 2rem;
+    }
 }
 
 .flex-panel-bottom {
     display: grid;
     align-items: center;
-    grid-template-columns: 30% 1fr;
-    gap: 2rem;
+    grid-template-columns: 100%;
     margin-top: 1rem;
+    gap: 1.5rem;
+
+
+    /* Responsive adjustments */
+    @media screen and (min-width: 768px) {
+        grid-template-columns: 30% 1fr;
+        gap: 2rem;
+    }
 
     .flex-inner-panel-bottom {
         display: flex;
@@ -206,10 +218,14 @@ select {
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 1rem;
     margin-top: 1rem;
-}
+  
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
 
 .card {
     display: flex;
