@@ -13,7 +13,7 @@
   <!-- Sticky Panel -->
   <section>
     <div class="currency-title">
-      <b>Currency Exchanger</b>
+      <b>{{currencyTitle}}</b>
       <button class="back_home_button" *ngIf="moreDetails" (click)="backHome()">Back Home</button>
     </div>
     <div class="sticky-panel">
@@ -70,6 +70,13 @@
         <span>{{card.currency}}</span>
         <p>{{card.convertedAmount}}</p>
       </div>
+    </div>
+  </section>
+
+  <!-- Historical Chart Section -->
+  <section>
+    <div class="historical-chart" *ngIf="false">
+      <p>Historical Rates Chart</p>
     </div>
   </section>
 </div>

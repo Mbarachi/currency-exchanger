@@ -16,6 +16,7 @@ export class CurrencyExchangeServiceService {
   private cacheKey = 'latestExchangeRates';
 
   private cacheExpiry = 60 * 60 * 1000; // Cache expiry time in milliseconds (1 hour)
+  private symbolsKey = 'exchangeSymbols';
 
 
   private getFromLocalStorage(): any {
@@ -63,6 +64,31 @@ export class CurrencyExchangeServiceService {
         tap((data) => {
           // Save the fetched data to localStorage
           this.saveToLocalStorage(data);
+        })
+      );
+    }
+  }
+
+  getSymbols(): Observable<any> {
+    const cachedSymbols = localStorage.getItem(this.symbolsKey);
+
+    if (cachedSymbols) {
+      // Symbols are available in local storage, return them as an observable
+      return of(JSON.parse(cachedSymbols));
+    } else {
+      // Symbols not available in local storage, fetch from the API
+      const symbolsUrl = `${this.baseUrl}/symbols?access_key=${this.accessKey}`;
+      
+      return this.httpClient.get(symbolsUrl).pipe(
+        catchError((error) => {
+          console.error('Error fetching symbols:', error);
+          return of(null);
+        }),
+        tap((symbols) => {
+          // Save the fetched symbols to local storage
+          if (symbols) {
+            localStorage.setItem(this.symbolsKey, JSON.stringify(symbols));
+          }
         })
       );
     }

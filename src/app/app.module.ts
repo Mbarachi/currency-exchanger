@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [
-    CurrencyExchangeServiceService
+    // CurrencyExchangeServiceService
   ],
   bootstrap: [AppComponent]
 })

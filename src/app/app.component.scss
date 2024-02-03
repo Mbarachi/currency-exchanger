@@ -1,10 +1,12 @@
 header {
     color: white;
     padding: 0.5rem 1rem;
-    background-color: #333; /* makes the header Opaque */
+    background-color: #333;
+    /* makes the header Opaque */
     border: 1px solid;
     margin-top: 1rem;
-    position: sticky; /* makes the header sticky */
+    position: sticky;
+    /* makes the header sticky */
     top: 0;
     z-index: 100;
 }
@@ -212,4 +214,13 @@ select {
 
 .full-width {
     flex-grow: 1;
-  }
+}
+
+.historical-chart {
+    display: block;
+    border: 1px solid white;
+    border-radius: 15px;
+    padding: 1rem;
+    height: 600px;
+    margin: 0 auto;
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrencyExchangeServiceService } from 'src/services/currency-exchange-service.service';
-import { CurrencyExchangeRates } from 'src/types/currencyExchangeTypes';
+import { CurrencyExchangeRates, CurrencySymbols } from 'src/types/currencyExchangeTypes';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,13 +25,15 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLatestRates();
+    this.getSymbols();
   }
 
-  title = 'currency-coverter';
+  currencyTitle :string = 'Currency Exchanger'
 
   cards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
   currencies: CurrencyExchangeRates = {}
+  currencySymbols: CurrencySymbols = {}
 
   popularCurrenciesCovertedRates: any[] = []
 
@@ -58,6 +60,17 @@ export class AppComponent implements OnInit {
 
   getCurrencyCodes(): string[] {
     return Object.keys(this.currencies)
+  }
+
+  getSymbols(){
+    this.exchangeService.getSymbols().subscribe((res) => {
+      if (res.success) {
+        this.currencySymbols = res.symbols;
+      }
+    },
+    (error) => {
+      console.log(error);
+    })
   }
 
   onToCurrencyChange(event: any) {
@@ -98,10 +111,12 @@ export class AppComponent implements OnInit {
 
   onClickMoreDetails() {
     this.moreDetails = true;
+    this.currencyTitle = this.currencySymbols[this.selectedFromCurrency]
   }
 
   backHome() {
     this.moreDetails = false
+    this.currencyTitle = 'Currency Exchanger'
   }
 
 }
