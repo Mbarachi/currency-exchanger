@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
   selectedFromCurrency = 'EUR';
   selectedToCurrency = 'USD';
 
-  displayResult: string = 'XX.XX USD'
+  displayResult: string = `XX.XX ${this.selectedToCurrency}`
+  convertedRate: string = ''
 
   // Nine most popular currency
   popularCurrencies: string[] = ['USD', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK'];
@@ -26,9 +27,10 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.getLatestRates();
     this.getSymbols();
+    this.performConversion();
   }
 
-  currencyTitle :string = 'Currency Exchanger'
+  currencyTitle: string = 'Currency Exchanger'
 
   currencies: CurrencyExchangeRates = {}
   currencySymbols: CurrencySymbols = {}
@@ -51,7 +53,6 @@ export class AppComponent implements OnInit {
   }
 
   onInput(event: any) {
-    console.log(event.target.value)
     this.inputAmount = event.target.value
     this.areElementsDisabled = !event.target.value;
   }
@@ -60,23 +61,44 @@ export class AppComponent implements OnInit {
     return Object.keys(this.currencies)
   }
 
-  getSymbols(){
+  getSymbols() {
     this.exchangeService.getSymbols().subscribe((res) => {
       if (res.success) {
         this.currencySymbols = res.symbols;
       }
     },
-    (error) => {
-      console.log(error);
-    })
+      (error) => {
+        console.log(error);
+      })
   }
 
+  goToMoreDetails(event: Event): void {
+    const buttonText = (event.target as HTMLButtonElement).textContent;
+
+    if (buttonText) {
+      // Split the button text using the hyphen
+      const currencyCodes = buttonText.split('-');
+
+      if (currencyCodes.length === 2) {
+        const fromCurrency = currencyCodes[0]
+        const toCurrency = currencyCodes[1].split(' ')
+        this.selectedFromCurrency = fromCurrency
+        this.selectedToCurrency = toCurrency[0]
+        this.performConversion();
+      }
+      
+      this.onClickMoreDetails();
+
+    }
+  }
   onToCurrencyChange(event: any) {
     this.selectedToCurrency = event.target.value;
+    this.performConversion();
   }
 
   onFromCurrencyChange(event: any) {
     this.selectedFromCurrency = event.target.value;
+    this.performConversion();
   }
 
   onSwap() {
@@ -84,6 +106,7 @@ export class AppComponent implements OnInit {
     const temp = this.selectedFromCurrency;
     this.selectedFromCurrency = this.selectedToCurrency;
     this.selectedToCurrency = temp;
+    this.performConversion()
   }
 
   onConvert() {
@@ -105,6 +128,20 @@ export class AppComponent implements OnInit {
     }
   }
 
+
+  performConversion() {
+    if (this.currencies[this.selectedFromCurrency] && this.currencies[this.selectedToCurrency]) {
+      const fromRate = this.currencies[this.selectedFromCurrency];
+      const toRate = this.currencies[this.selectedToCurrency];
+      const convertedAmount = (1 / fromRate) * toRate;
+
+      // Display the result for 1 unit of the selected currency against the "To" currency
+      this.convertedRate = `1 ${this.selectedFromCurrency} = ${Number(convertedAmount.toFixed(6))} ${this.selectedToCurrency}`;
+    } else {
+      console.error('Exchange rates not available for selected currencies.');
+    }
+  }
+
   onClickMoreDetails() {
     this.moreDetails = true;
     this.currencyTitle = this.currencySymbols[this.selectedFromCurrency]
@@ -113,6 +150,10 @@ export class AppComponent implements OnInit {
   backHome() {
     this.moreDetails = false
     this.currencyTitle = 'Currency Exchanger'
+    this.selectedFromCurrency = 'EUR';
+    this.selectedToCurrency = 'USD';
+    this.displayResult = 'XX.XX USD';
+    this.inputAmount = 0
   }
 
 }

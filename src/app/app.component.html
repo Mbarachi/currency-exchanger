@@ -6,8 +6,8 @@
          <img src="../assets/logo.png" alt="Logo">
        </div>
        <div class="buttons">
-         <button>EUR-USD Details</button>
-         <button>EUR-GBP Details</button>
+         <button (click)="goToMoreDetails($event)">EUR-USD Details</button>
+         <button (click)="goToMoreDetails($event)">EUR-GBP Details</button>
        </div>
       </nav>
     </header>
@@ -21,7 +21,7 @@
         <div class="flex-panel-top">
           <div class="amount-input">
             <label for="amount">Amount</label>
-            <input matInput type="number" (input)="onInput($event)">
+            <input matInput type="number" [(ngModel)]="inputAmount" (input)="onInput($event)">
           </div>
           <div class="converter">
             <div class="currency-dropdown">
@@ -52,7 +52,7 @@
         </div>
         <div class="flex-panel-bottom">
           <div class="exchange-rate-container">
-            <p>1.00 EUR = {{ currencies['USD'] }} USD</p>
+            <p>{{ convertedRate }}</p>
           </div>
           <div class="flex-inner-panel-bottom">
             <div class="exchange-rate-value-container" [ngClass]="{'full-width': !moreDetails}">
