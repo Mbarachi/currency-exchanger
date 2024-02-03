@@ -18,6 +18,11 @@ export class AppComponent implements OnInit {
   selectedFromCurrency = 'EUR';
   selectedToCurrency = 'USD';
 
+  displayResult: string = 'XX.XX USD'
+
+  // Nine most popular currency
+  popularCurrencies: string[] = ['USD', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK']; 
+
   ngOnInit(): void {
     this.getLatestRates();
   }
@@ -27,6 +32,8 @@ export class AppComponent implements OnInit {
   cards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
   currencies: CurrencyExchangeRates = {}
+
+  popularCurrenciesCovertedRates:any[] = []
 
   getLatestRates() {
     this.exchangeService.getLatestExchangeRates().subscribe(
@@ -41,10 +48,10 @@ export class AppComponent implements OnInit {
     );
   }
 
-  onInput(value: any) {
-    console.log(value.target.value)
-    let amount = value.target.value
-    this.areElementsDisabled = !value.target.value;
+  onInput(event: any) {
+    console.log(event.target.value)
+    this.inputAmount = event.target.value
+    this.areElementsDisabled = !event.target.value;
   }
 
   getCurrencyCodes(): string[] {
@@ -57,6 +64,34 @@ export class AppComponent implements OnInit {
 
   onFromCurrencyChange(event: any) {
     this.selectedFromCurrency = event.target.value;
+  }
+
+  onSwap() {
+    // Swap the selected currencies
+    const temp = this.selectedFromCurrency;
+    this.selectedFromCurrency = this.selectedToCurrency;
+    this.selectedToCurrency = temp;
+  }
+
+  onConvert() {
+    if (this.currencies[this.selectedFromCurrency] && this.currencies[this.selectedToCurrency]) {
+      const fromRate = this.currencies[this.selectedFromCurrency];
+      const toRate = this.currencies[this.selectedToCurrency];
+      const convertedAmount = (this.inputAmount / fromRate) * toRate;
+      this.displayResult = `${Number(convertedAmount.toFixed(2))} ${this.selectedToCurrency}`
+
+      // Perform the conversion for the 9 most popular currencies
+        const convertedResults = this.popularCurrencies.map((currency) => {
+          const popularToRate = this.currencies[currency];
+          const popularConvertedAmount = (this.inputAmount / fromRate) * popularToRate;
+          return { currency, convertedAmount: popularConvertedAmount };
+        });
+        this.popularCurrenciesCovertedRates = convertedResults
+        // Display the results for the 9 most popular currencies
+        console.log('Converted amounts for popular currencies:', convertedResults);
+    } else {
+      console.error('Exchange rates not available for selected currencies.');
+    }
   }
 
 }
