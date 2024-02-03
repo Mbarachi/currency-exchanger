@@ -1,70 +1,72 @@
 <div class="container">
-  <header>
-    <nav class="navbar">
-      <div class="logo">
-        <img src="../assets/logo.png" alt="Logo">
+ <div class="sticky">
+   <header>
+     <nav class="navbar">
+       <div class="logo">
+         <img src="../assets/logo.png" alt="Logo">
+       </div>
+       <div class="buttons">
+         <button>EUR-USD Details</button>
+         <button>EUR-GBP Details</button>
+       </div>
+      </nav>
+    </header>
+
+    <section>
+      <div class="currency-title">
+        <b>{{currencyTitle}}</b>
+        <button class="back_home_button" *ngIf="moreDetails" (click)="backHome()">Back Home</button>
       </div>
-      <div class="buttons">
-        <button>EUR-USD Details</button>
-        <button>EUR-GBP Details</button>
-      </div>
-    </nav>
-  </header>
-  <!-- Sticky Panel -->
-  <section>
-    <div class="currency-title">
-      <b>{{currencyTitle}}</b>
-      <button class="back_home_button" *ngIf="moreDetails" (click)="backHome()">Back Home</button>
-    </div>
-    <div class="sticky-panel">
-      <div class="flex-panel-top">
-        <div class="amount-input">
-          <label for="amount">Amount</label>
-          <input matInput type="number" (input)="onInput($event)">
-        </div>
-        <div class="converter">
-          <div class="currency-dropdown">
-            <div class="from-input">
-              <label for="from">From</label>
-              <select [disabled]="areElementsDisabled || moreDetails" [(ngModel)]="selectedFromCurrency"
-                (change)="onFromCurrencyChange($event)">
-                <option *ngFor="let currencyCode of getCurrencyCodes()" [value]="currencyCode">{{ currencyCode }}
-                </option>
-              </select>
+      <div class="panel">
+        <div class="flex-panel-top">
+          <div class="amount-input">
+            <label for="amount">Amount</label>
+            <input matInput type="number" (input)="onInput($event)">
+          </div>
+          <div class="converter">
+            <div class="currency-dropdown">
+              <div class="from-input">
+                <label for="from">From</label>
+                <select [disabled]="areElementsDisabled || moreDetails" [(ngModel)]="selectedFromCurrency"
+                  (change)="onFromCurrencyChange($event)">
+                  <option *ngFor="let currencyCode of getCurrencyCodes()" [value]="currencyCode">{{ currencyCode }}
+                  </option>
+                </select>
+              </div>
+              <span class="material-symbols-outlined compare_arrows" (click)="onSwap()">
+                compare_arrows
+              </span>
+              <div class="to-input">
+                <label for="to">To</label>
+                <select [disabled]="areElementsDisabled" [(ngModel)]="selectedToCurrency"
+                  (change)="onToCurrencyChange($event)">
+                  <option *ngFor="let currencyCode of getCurrencyCodes()" [value]="currencyCode">{{ currencyCode }}
+                  </option>
+                </select>
+              </div>
             </div>
-            <span class="material-symbols-outlined compare_arrows" (click)="onSwap()">
-              compare_arrows
-            </span>
-            <div class="to-input">
-              <label for="to">To</label>
-              <select [disabled]="areElementsDisabled" [(ngModel)]="selectedToCurrency"
-                (change)="onToCurrencyChange($event)">
-                <option *ngFor="let currencyCode of getCurrencyCodes()" [value]="currencyCode">{{ currencyCode }}
-                </option>
-              </select>
+            <div>
+              <button class="convert_button" [class.disabled]="areElementsDisabled" (click)="onConvert()">Convert</button>
             </div>
           </div>
-          <div>
-            <button class="convert_button" [class.disabled]="areElementsDisabled" (click)="onConvert()">Convert</button>
+        </div>
+        <div class="flex-panel-bottom">
+          <div class="exchange-rate-container">
+            <p>1.00 EUR = {{ currencies['USD'] }} USD</p>
+          </div>
+          <div class="flex-inner-panel-bottom">
+            <div class="exchange-rate-value-container" [ngClass]="{'full-width': !moreDetails}">
+              <p>{{displayResult}}</p>
+            </div>
+            <button class="more_details_button" [class.disabled]="areElementsDisabled" (click)="onClickMoreDetails()" *ngIf="!moreDetails">More Details</button>
           </div>
         </div>
       </div>
-      <div class="flex-panel-bottom">
-        <div class="exchange-rate-container">
-          <p>1.00 EUR = {{ currencies['USD'] }} USD</p>
-        </div>
-        <div class="flex-inner-panel-bottom">
-          <div class="exchange-rate-value-container" [ngClass]="{'full-width': !moreDetails}">
-            <p>{{displayResult}}</p>
-          </div>
-          <button class="more_details_button" [class.disabled]="areElementsDisabled" (click)="onClickMoreDetails()" *ngIf="!moreDetails">More Details</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+ </div>
 
   <!-- Card grid Section -->
-  <section>
+  <section *ngIf="!moreDetails">
     <div class="card-grid">
       <div class="card" *ngFor="let card of popularCurrenciesCovertedRates">
         <span>{{card.currency}}</span>
@@ -74,8 +76,8 @@
   </section>
 
   <!-- Historical Chart Section -->
-  <section>
-    <div class="historical-chart" *ngIf="false">
+  <section *ngIf="moreDetails">
+    <div class="historical-chart">
       <p>Historical Rates Chart</p>
     </div>
   </section>

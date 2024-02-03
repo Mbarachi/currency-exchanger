@@ -30,8 +30,6 @@ export class AppComponent implements OnInit {
 
   currencyTitle :string = 'Currency Exchanger'
 
-  cards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
   currencies: CurrencyExchangeRates = {}
   currencySymbols: CurrencySymbols = {}
 
@@ -102,8 +100,6 @@ export class AppComponent implements OnInit {
         return { currency, convertedAmount: popularConvertedAmount };
       });
       this.popularCurrenciesCovertedRates = convertedResults
-      // Display the results for the 9 most popular currencies
-      console.log('Converted amounts for popular currencies:', convertedResults);
     } else {
       console.error('Exchange rates not available for selected currencies.');
     }
