@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrencyExchangeServiceService } from 'src/services/currency-exchange-service.service';
 import { CurrencyExchangeRates } from 'src/types/currencyExchangeTypes';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -16,8 +15,11 @@ export class AppComponent implements OnInit {
 
   areElementsDisabled: boolean = true
 
+  selectedFromCurrency = 'EUR';
+  selectedToCurrency = 'USD';
+
   ngOnInit(): void {
-    // this.getLatestRates();
+    this.getLatestRates();
   }
 
   title = 'currency-coverter';
@@ -27,27 +29,34 @@ export class AppComponent implements OnInit {
   currencies: CurrencyExchangeRates = {}
 
   getLatestRates() {
-    this.exchangeService.getLatestExchangeRates().subscribe((res) => {
-      if(res.success){
-        this.currencies = res.rates
-        console.log(res)
-      }
-    },
+    this.exchangeService.getLatestExchangeRates().subscribe(
+      (res) => {
+        if (res.success) {
+          this.currencies = res.rates;
+        }
+      },
       (error) => {
-        console.log(error)
+        console.log(error);
       }
-
-    )
+    );
   }
 
-  onInput(value:any){
+  onInput(value: any) {
     console.log(value.target.value)
     let amount = value.target.value
     this.areElementsDisabled = !value.target.value;
   }
 
-  getCurrencyCodes(): string[]{
+  getCurrencyCodes(): string[] {
     return Object.keys(this.currencies)
+  }
+
+  onToCurrencyChange(event: any) {
+    this.selectedToCurrency = event.target.value;
+  }
+
+  onFromCurrencyChange(event: any) {
+    this.selectedFromCurrency = event.target.value;
   }
 
 }
