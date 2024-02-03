@@ -14,6 +14,7 @@
   <section>
     <div class="currency-title">
       <b>Currency Exchanger</b>
+      <button class="back_home_button" *ngIf="moreDetails" (click)="backHome()">Back Home</button>
     </div>
     <div class="sticky-panel">
       <div class="flex-panel-top">
@@ -25,7 +26,7 @@
           <div class="currency-dropdown">
             <div class="from-input">
               <label for="from">From</label>
-              <select [disabled]="areElementsDisabled" [(ngModel)]="selectedFromCurrency"
+              <select [disabled]="areElementsDisabled || moreDetails" [(ngModel)]="selectedFromCurrency"
                 (change)="onFromCurrencyChange($event)">
                 <option *ngFor="let currencyCode of getCurrencyCodes()" [value]="currencyCode">{{ currencyCode }}
                 </option>
@@ -53,10 +54,10 @@
           <p>1.00 EUR = {{ currencies['USD'] }} USD</p>
         </div>
         <div class="flex-inner-panel-bottom">
-          <div class="exchange-rate-value-container">
+          <div class="exchange-rate-value-container" [ngClass]="{'full-width': !moreDetails}">
             <p>{{displayResult}}</p>
           </div>
-          <button class="more_details_button" [class.disabled]="areElementsDisabled">More Details</button>
+          <button class="more_details_button" [class.disabled]="areElementsDisabled" (click)="onClickMoreDetails()" *ngIf="!moreDetails">More Details</button>
         </div>
       </div>
     </div>

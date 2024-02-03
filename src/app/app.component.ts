@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   displayResult: string = 'XX.XX USD'
 
   // Nine most popular currency
-  popularCurrencies: string[] = ['USD', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK']; 
+  popularCurrencies: string[] = ['USD', 'EUR', 'JPY', 'GBP', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK'];
 
   ngOnInit(): void {
     this.getLatestRates();
@@ -33,7 +33,9 @@ export class AppComponent implements OnInit {
 
   currencies: CurrencyExchangeRates = {}
 
-  popularCurrenciesCovertedRates:any[] = []
+  popularCurrenciesCovertedRates: any[] = []
+
+  moreDetails: boolean = false
 
   getLatestRates() {
     this.exchangeService.getLatestExchangeRates().subscribe(
@@ -81,17 +83,25 @@ export class AppComponent implements OnInit {
       this.displayResult = `${Number(convertedAmount.toFixed(2))} ${this.selectedToCurrency}`
 
       // Perform the conversion for the 9 most popular currencies
-        const convertedResults = this.popularCurrencies.map((currency) => {
-          const popularToRate = this.currencies[currency];
-          const popularConvertedAmount = (this.inputAmount / fromRate) * popularToRate;
-          return { currency, convertedAmount: popularConvertedAmount };
-        });
-        this.popularCurrenciesCovertedRates = convertedResults
-        // Display the results for the 9 most popular currencies
-        console.log('Converted amounts for popular currencies:', convertedResults);
+      const convertedResults = this.popularCurrencies.map((currency) => {
+        const popularToRate = this.currencies[currency];
+        const popularConvertedAmount = (this.inputAmount / fromRate) * popularToRate;
+        return { currency, convertedAmount: popularConvertedAmount };
+      });
+      this.popularCurrenciesCovertedRates = convertedResults
+      // Display the results for the 9 most popular currencies
+      console.log('Converted amounts for popular currencies:', convertedResults);
     } else {
       console.error('Exchange rates not available for selected currencies.');
     }
+  }
+
+  onClickMoreDetails() {
+    this.moreDetails = true;
+  }
+
+  backHome() {
+    this.moreDetails = false
   }
 
 }
