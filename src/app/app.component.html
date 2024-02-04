@@ -82,6 +82,8 @@
   <!-- Historical Chart Section -->
   <section *ngIf="moreDetails">
     <div class="historical-chart">
+      <h3 *ngIf="monthlyData.length === 0">Loading....</h3>
+      <h3 *ngIf="monthlyData.length > 0">Historical Rates Chart</h3>
       <canvas id="canvas"></canvas>
     </div>
   </section>
