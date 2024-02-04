@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { CurrencyExchangeServiceService } from 'src/services/currency-exchange-service.service';
 import { CurrencyExchangeRates, CurrencySymbols } from 'src/types/currencyExchangeTypes';
 import { Chart } from 'chart.js/auto';
@@ -53,9 +52,6 @@ export class AppComponent implements OnInit {
         if (res.success) {
           this.currencies = res.rates;
         }
-      },
-      (error) => {
-        console.log(error);
       }
     );
   }
@@ -81,11 +77,10 @@ export class AppComponent implements OnInit {
     this.exchangeService.getSymbols().subscribe((res) => {
       if (res.success) {
         this.currencySymbols = res.symbols;
+      }else{
+        console.log(res.error)
       }
-    },
-      (error) => {
-        console.log(error);
-      })
+    })
   }
 
   goToMoreDetails(event: Event): void {
@@ -154,7 +149,6 @@ export class AppComponent implements OnInit {
       const fromRate = this.currencies[this.selectedFromCurrency];
       const toRate = this.currencies[this.selectedToCurrency];
       const convertedAmount = (1 / fromRate) * toRate;
-
       // Display the result for 1 unit of the selected currency against the "To" currency
       this.convertedRate = `1 ${this.selectedFromCurrency} = ${Number(convertedAmount.toFixed(6))} ${this.selectedToCurrency}`;
     } else {
@@ -175,13 +169,13 @@ export class AppComponent implements OnInit {
     this.currencyTitle = 'Currency Exchanger'
     this.selectedFromCurrency = 'EUR';
     this.selectedToCurrency = 'USD';
-    this.displayResult = 'XX.XX USD';
+    this.displayResult = `XX.XX USD`;
     this.inputAmount = 0
     this.convertedRate = `1 ${this.selectedFromCurrency} = ${this.currencies[this.selectedToCurrency]}${this.selectedToCurrency}`
   }
 
   getHistoricalRate() {
-    this.monthlyData = [] // empty dataset
+    this.monthlyData = [] // empty dataset 
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
@@ -205,7 +199,7 @@ export class AppComponent implements OnInit {
       const formattedDate = this.formatDate(lastDayOfMonth);
       this.exchangeService.fetchHistoricalRates(this.selectedToCurrency, this.selectedFromCurrency, formattedDate).subscribe(data => {
         if (data.success) {
-          this.monthlyData.push(data);
+          this.monthlyData.unshift(data);
         }
 
         if (this.monthlyData.length === 12) {
@@ -278,7 +272,6 @@ export class AppComponent implements OnInit {
       }
     });
   }
-
 
   getRandomColor() {
     const letters = '0123456789ABCDEF';

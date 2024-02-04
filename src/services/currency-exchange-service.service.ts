@@ -12,10 +12,11 @@ export class CurrencyExchangeServiceService {
 
   accessKey = environment.apiKey;
   baseUrl = environment.baseUrl
+  baseCurrency = 'EUR'
 
   private cacheKey = 'latestExchangeRates';
 
-  private cacheExpiry = 60 * 60 * 1000; // Cache expiry time in milliseconds (1 hour)
+  private cacheExpiry = 60 * 60 * 1000; // Cache expiry time in milliseconds (1 hour) to work around paid API limitations
   private symbolsKey = 'exchangeSymbols';
 
 
@@ -97,7 +98,7 @@ export class CurrencyExchangeServiceService {
   }
 
   fetchHistoricalRates(toCurrency: string, fromCurrency: string, date: string): Observable<any> {
-    const apiUrl = `${this.baseUrl}/${date}?access_key=${this.accessKey}&base=EUR&symbols=${fromCurrency},${toCurrency}`;
+    const apiUrl = `${this.baseUrl}/${date}?access_key=${this.accessKey}&base=${this.baseCurrency}&symbols=${fromCurrency},${toCurrency}`;
     return this.httpClient.get(apiUrl);
   }
 }
