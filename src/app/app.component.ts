@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { CurrencyExchangeServiceService } from 'src/services/currency-exchange-service.service';
 import { CurrencyExchangeRates, CurrencySymbols } from 'src/types/currencyExchangeTypes';
+import { Chart } from 'chart.js/auto';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,6 +12,10 @@ import { CurrencyExchangeRates, CurrencySymbols } from 'src/types/currencyExchan
 export class AppComponent implements OnInit {
 
   constructor(private exchangeService: CurrencyExchangeServiceService) { }
+
+  chart: Chart | undefined;
+
+  monthlyData: any[] = [];
 
   inputAmount: number = 0
 
@@ -33,7 +39,7 @@ export class AppComponent implements OnInit {
 
   moreDetails: boolean = false
 
-  showCards:boolean = false
+  showCards: boolean = false
 
   ngOnInit(): void {
     this.getLatestRates();
@@ -55,8 +61,16 @@ export class AppComponent implements OnInit {
   }
 
   onInput(event: any) {
-    this.inputAmount = event.target.value
+    const enteredValue = event.target.value
     this.areElementsDisabled = !event.target.value;
+
+    // /Check if the entered value is negative
+    if (enteredValue < 0) {
+      this.inputAmount = 0;
+    } else {
+      // Allow positive values
+      this.inputAmount = enteredValue;
+    }
   }
 
   getCurrencyCodes(): string[] {
@@ -88,7 +102,7 @@ export class AppComponent implements OnInit {
         this.selectedToCurrency = toCurrency[0]
         this.performConversion();
       }
-      
+
       this.onClickMoreDetails();
 
     }
@@ -96,6 +110,9 @@ export class AppComponent implements OnInit {
   onToCurrencyChange(event: any) {
     this.selectedToCurrency = event.target.value;
     this.performConversion();
+    if (this.moreDetails) {
+      this.getHistoricalRate();
+    }
   }
 
   onFromCurrencyChange(event: any) {
@@ -122,7 +139,7 @@ export class AppComponent implements OnInit {
       const convertedResults = this.popularCurrencies.map((currency) => {
         const popularToRate = this.currencies[currency];
         const popularConvertedAmount = (this.inputAmount / fromRate) * popularToRate;
-        return { currency, convertedAmount: popularConvertedAmount };
+        return { currency, convertedAmount: popularConvertedAmount.toFixed(2) };
       });
       this.popularCurrenciesCovertedRates = convertedResults
       this.showCards = true
@@ -147,7 +164,9 @@ export class AppComponent implements OnInit {
 
   onClickMoreDetails() {
     this.moreDetails = true;
+    this.showCards = false
     this.currencyTitle = this.currencySymbols[this.selectedFromCurrency]
+    this.getHistoricalRate()
   }
 
   backHome() {
@@ -158,6 +177,116 @@ export class AppComponent implements OnInit {
     this.selectedToCurrency = 'USD';
     this.displayResult = 'XX.XX USD';
     this.inputAmount = 0
+    this.convertedRate = `1 ${this.selectedFromCurrency} = ${this.currencies[this.selectedToCurrency]}${this.selectedToCurrency}`
+  }
+
+  getHistoricalRate() {
+    this.monthlyData = [] // empty dataset
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+
+    for (let i = 0; i <= 12; i++) {
+      let year = currentYear;
+      let month = currentMonth - i;
+
+      if (month <= 0) {
+        month += 12;
+        year--;
+      }
+
+      // Ensure we are not in the current month
+      if (year === currentYear && month === currentMonth) {
+        continue;
+      }
+
+      // Format the date to 'YYYY-MM-DD' using the last day of the month
+      const lastDayOfMonth = new Date(year, month, 0);
+      const formattedDate = this.formatDate(lastDayOfMonth);
+      this.exchangeService.fetchHistoricalRates(this.selectedToCurrency, this.selectedFromCurrency, formattedDate).subscribe(data => {
+        if (data.success) {
+          this.monthlyData.push(data);
+        }
+
+        if (this.monthlyData.length === 12) {
+          this.createChart();
+        }
+      });
+    }
+  }
+
+  formatDate(date: Date): string {
+    // Set the date to the first day of the next month
+    const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+
+    // Subtract one day to get the last day of the current month
+    const lastDayOfMonth = new Date(nextMonth.getTime() - 1);
+
+    const year = lastDayOfMonth.getFullYear();
+    const month = (lastDayOfMonth.getMonth() + 1).toString().padStart(2, '0');
+    const day = lastDayOfMonth.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  createChart() {
+    // Destroy existing chart if it exists for updates
+    if (this.chart) {
+      this.chart.destroy();
+    }
+    const labels = this.monthlyData.map(data => {
+      const date = new Date(data.date);
+      const monthName = date.toLocaleString('en-US', { month: 'short' });
+      const year = date.getFullYear();
+      return `${monthName} ${year}`;
+    });
+    const datasets = Object.keys(this.monthlyData[0].rates).map(currency => {
+      return {
+        label: currency,
+        data: this.monthlyData.map(data => data.rates[currency]),
+        fill: false,
+        borderColor: this.getRandomColor(),
+        tension: 0.1
+      };
+    });
+
+    this.chart = new Chart('canvas', {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: datasets
+      },
+      options: {
+        scales: {
+          x: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Months'
+            }
+          }] as any,
+          y: [{
+            ticks: {
+              beginAtZero: true,
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Rates'
+            }
+          }] as any
+        }
+      }
+    });
+  }
+
+
+  getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
 }

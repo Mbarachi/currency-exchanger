@@ -1,18 +1,20 @@
 <div class="container">
- <div class="sticky">
-   <header>
-     <nav class="navbar">
-       <div class="logo">
-         <img src="../assets/logo.png" alt="Logo">
-       </div>
-       <div class="buttons">
-         <button (click)="goToMoreDetails($event)">EUR-USD Details</button>
-         <button (click)="goToMoreDetails($event)">EUR-GBP Details</button>
-       </div>
+  <section class="sticky">
+    <!-- Sticky Header  -->
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img src="../assets/logo.png" alt="Logo">
+        </div>
+        <div class="buttons">
+          <button (click)="goToMoreDetails($event)">EUR-USD Details</button>
+          <button (click)="goToMoreDetails($event)">EUR-GBP Details</button>
+        </div>
       </nav>
     </header>
 
-    <section>
+    <!-- Sticky Panel -->
+    <div>
       <div class="currency-title">
         <b>{{currencyTitle}}</b>
         <button class="back_home_button" *ngIf="moreDetails" (click)="backHome()">Back Home</button>
@@ -21,7 +23,7 @@
         <div class="flex-panel-top">
           <div class="amount-input">
             <label for="amount">Amount</label>
-            <input matInput type="number" [(ngModel)]="inputAmount" (input)="onInput($event)">
+            <input matInput type="number" [(ngModel)]="inputAmount" (input)="onInput($event)" [min]="0">
           </div>
           <div class="converter">
             <div class="currency-dropdown">
@@ -46,7 +48,8 @@
               </div>
             </div>
             <div>
-              <button class="convert_button" [class.disabled]="areElementsDisabled" (click)="onConvert()">Convert</button>
+              <button class="convert_button" [class.disabled]="areElementsDisabled"
+                (click)="onConvert()">Convert</button>
             </div>
           </div>
         </div>
@@ -58,15 +61,16 @@
             <div class="exchange-rate-value-container" [ngClass]="{'full-width': !moreDetails}">
               <p>{{displayResult}}</p>
             </div>
-            <button class="more_details_button" [class.disabled]="areElementsDisabled" (click)="onClickMoreDetails()" *ngIf="!moreDetails">More Details</button>
+            <button class="more_details_button" [class.disabled]="areElementsDisabled" (click)="onClickMoreDetails()"
+              *ngIf="!moreDetails">More Details</button>
           </div>
         </div>
       </div>
-    </section>
- </div>
+    </div>
+  </section>
 
   <!-- Card grid Section -->
-  <section *ngIf="showCards">
+  <section *ngIf="showCards && !moreDetails">
     <div class="card-grid">
       <div class="card" *ngFor="let card of popularCurrenciesCovertedRates">
         <span>{{card.currency}}</span>
@@ -78,7 +82,7 @@
   <!-- Historical Chart Section -->
   <section *ngIf="moreDetails">
     <div class="historical-chart">
-      <p>Historical Rates Chart</p>
+      <canvas id="canvas"></canvas>
     </div>
   </section>
 </div>

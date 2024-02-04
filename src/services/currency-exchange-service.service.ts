@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { Observable, catchError, from, map, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -61,9 +61,11 @@ export class CurrencyExchangeServiceService {
           console.error('Error fetching exchange rates:', error);
           return of(null);
         }),
-        tap((data) => {
-          // Save the fetched data to localStorage
-          this.saveToLocalStorage(data);
+        tap((data: any) => {
+          // Save the fetched data to localStorage only when success is true
+          if (data && data.success) {
+            this.saveToLocalStorage(data);
+          }
         })
       );
     }
@@ -78,19 +80,24 @@ export class CurrencyExchangeServiceService {
     } else {
       // Symbols not available in local storage, fetch from the API
       const symbolsUrl = `${this.baseUrl}/symbols?access_key=${this.accessKey}`;
-      
+
       return this.httpClient.get(symbolsUrl).pipe(
         catchError((error) => {
           console.error('Error fetching symbols:', error);
           return of(null);
         }),
-        tap((symbols) => {
+        tap((symbols:any) => {
           // Save the fetched symbols to local storage
-          if (symbols) {
+          if (symbols && symbols.success) {
             localStorage.setItem(this.symbolsKey, JSON.stringify(symbols));
           }
         })
       );
     }
+  }
+
+  fetchHistoricalRates(toCurrency: string, fromCurrency: string, date: string): Observable<any> {
+    const apiUrl = `${this.baseUrl}/${date}?access_key=${this.accessKey}&base=EUR&symbols=${fromCurrency},${toCurrency}`;
+    return this.httpClient.get(apiUrl);
   }
 }
