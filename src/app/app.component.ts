@@ -43,7 +43,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.getLatestRates();
     this.getSymbols();
-    this.performConversion();
   }
 
   getLatestRates() {
@@ -51,6 +50,7 @@ export class AppComponent implements OnInit {
       (res) => {
         if (res.success) {
           this.currencies = res.rates;
+          this.performConversion();
         }
       }
     );
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
     this.exchangeService.getSymbols().subscribe((res) => {
       if (res.success) {
         this.currencySymbols = res.symbols;
-      }else{
+      } else {
         console.log(res.error)
       }
     })
