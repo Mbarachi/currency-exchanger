@@ -87,9 +87,7 @@ export class AppComponent implements OnInit {
     const buttonText = (event.target as HTMLButtonElement).textContent;
 
     if (buttonText) {
-      // Split the button text using the hyphen
       const currencyCodes = buttonText.split('-');
-
       if (currencyCodes.length === 2) {
         const fromCurrency = currencyCodes[0]
         const toCurrency = currencyCodes[1].split(' ')
@@ -115,8 +113,8 @@ export class AppComponent implements OnInit {
     this.performConversion();
   }
 
+  // Swap the selected currencies
   onSwap() {
-    // Swap the selected currencies
     const temp = this.selectedFromCurrency;
     this.selectedFromCurrency = this.selectedToCurrency;
     this.selectedToCurrency = temp;
@@ -175,7 +173,7 @@ export class AppComponent implements OnInit {
   }
 
   getHistoricalRate() {
-    this.monthlyData = [] // empty dataset 
+    this.monthlyData = []
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
@@ -189,7 +187,6 @@ export class AppComponent implements OnInit {
         year--;
       }
 
-      // Ensure we are not in the current month
       if (year === currentYear && month === currentMonth) {
         continue;
       }
@@ -210,7 +207,6 @@ export class AppComponent implements OnInit {
   }
 
   formatDate(date: Date): string {
-    // Set the date to the first day of the next month
     const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1);
 
     // Subtract one day to get the last day of the current month

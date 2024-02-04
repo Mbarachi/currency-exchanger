@@ -31,8 +31,6 @@ export class CurrencyExchangeServiceService {
         return data;
       }
     }
-
-    // If the data is not present or expired, return null
     return null;
   }
 
@@ -51,7 +49,6 @@ export class CurrencyExchangeServiceService {
     const cachedData = this.getFromLocalStorage();
 
     if (cachedData) {
-      // If cached data is available, return it as an observable
       return of(cachedData);
     } else {
       // If no cached data or data is expired, fetch from the API
@@ -87,7 +84,7 @@ export class CurrencyExchangeServiceService {
           console.error('Error fetching symbols:', error);
           return of(null);
         }),
-        tap((symbols:any) => {
+        tap((symbols: any) => {
           // Save the fetched symbols to local storage
           if (symbols && symbols.success) {
             localStorage.setItem(this.symbolsKey, JSON.stringify(symbols));
